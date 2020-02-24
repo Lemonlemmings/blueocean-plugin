@@ -10,6 +10,12 @@ export default class BooleanPropertyInput extends React.Component {
             title = p.displayName;
         }
         title += (p.isRequired ? '*' : '');
+
+        let descriptionElement;
+        if(p.description) {
+            descriptionElement = <div className="help-tip"><p>{ p.description }</p></div>;
+        }
+
         return (
             <div className="form-container">
                 <Checkbox
@@ -20,9 +26,7 @@ export default class BooleanPropertyInput extends React.Component {
                     }}
                     label={title}
                 />
-                <div className="help-tip">
-                    <p>{ p.description }</p>
-                </div>
+                {descriptionElement}
             </div>
         );
     }

@@ -12,7 +12,7 @@ import java.util.List;
 @ExportedBean
 public class ExportedPipelineStep extends ExportedPipelineFunction {
     protected final StepDescriptor descriptor;
-    protected String description = "I am a short description";
+    protected String description = null;
 
     public ExportedPipelineStep(DescribableModel<? extends Step> model, String functionName,
                                 StepDescriptor descriptor) {

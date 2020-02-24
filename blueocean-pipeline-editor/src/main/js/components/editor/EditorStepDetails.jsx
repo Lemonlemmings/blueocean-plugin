@@ -101,29 +101,38 @@ export class EditorStepDetails extends Component {
         }
 
         const StepEditor = this.getStepEditor(step);
+        const stepMetadata = this.getStepMetadata(step);
+
+        let stepDescriptionElement = null;
+        if(stepMetadata.stepDescription) {
+            stepDescriptionElement = <p>{stepMetadata.stepDescription}</p>;
+        }
 
         return (
-            <div className="editor-step-detail editor-config-panel">
-                <section>
-                    <ValidationMessageList node={step} />
-                    <StepEditor key={step.id} onChange={step => this.commitValue(step)} step={step} />
-                </section>
-                {step.isContainer && (
+            <div>
+                {stepDescriptionElement}
+                <div className="editor-step-detail editor-config-panel">
                     <section>
-                        <h5>{t('editor.jenkins.pipeline.step.substep', { default: 'Child steps' })}</h5>
-                        <EditorStepList
-                            stage={stage}
-                            steps={step.children}
-                            parent={step}
-                            onAddStepClick={() => this.props.openSelectStepDialog(step)}
-                            onStepSelected={step => this.props.selectedStepChanged(step)}
-                            onDragStepBegin={this.props.onDragStepBegin}
-                            onDragStepHover={this.props.onDragStepHover}
-                            onDragStepDrop={this.props.onDragStepDrop}
-                            onDragStepEnd={this.props.onDragStepEnd}
-                        />
+                        <ValidationMessageList node={step} />
+                        <StepEditor key={step.id} onChange={step => this.commitValue(step)} step={step} />
                     </section>
-                )}
+                    {step.isContainer && (
+                        <section>
+                            <h5>{t('editor.jenkins.pipeline.step.substep', { default: 'Child steps' })}</h5>
+                            <EditorStepList
+                                stage={stage}
+                                steps={step.children}
+                                parent={step}
+                                onAddStepClick={() => this.props.openSelectStepDialog(step)}
+                                onStepSelected={step => this.props.selectedStepChanged(step)}
+                                onDragStepBegin={this.props.onDragStepBegin}
+                                onDragStepHover={this.props.onDragStepHover}
+                                onDragStepDrop={this.props.onDragStepDrop}
+                                onDragStepEnd={this.props.onDragStepEnd}
+                            />
+                        </section>
+                    )}
+                </div>
             </div>
         );
     }

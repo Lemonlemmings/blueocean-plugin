@@ -11,6 +11,11 @@ export default class IntegerPropertyInput extends React.Component {
         }
         title += (p.isRequired ? '*' : '');
 
+        let descriptionElement;
+        if(p.description) {
+            descriptionElement = <div className="help-tip"><p>{ p.description }</p></div>;
+        }
+
         return (
             <FormElement
                 title={title}
@@ -27,9 +32,7 @@ export default class IntegerPropertyInput extends React.Component {
                         }}
                     />
                 </div>
-                <div className="help-tip">
-                    <p>{ p.description }</p>
-                </div>
+                {descriptionElement}
             </FormElement>
         );
     }

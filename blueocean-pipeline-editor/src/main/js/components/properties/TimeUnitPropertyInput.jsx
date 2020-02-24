@@ -13,6 +13,12 @@ export default class TimeUnitPropertyInput extends React.Component {
             title = p.displayName;
         }
         title += (p.isRequired ? '*' : '');
+
+        let descriptionElement;
+        if(p.description) {
+            descriptionElement = <div className="help-tip"><p>{ p.description }</p></div>;
+        }
+
         return (
             <div>
                 <label className="form-label">{title}</label>
@@ -24,9 +30,7 @@ export default class TimeUnitPropertyInput extends React.Component {
                         onChange(step);
                     }}
                 />
-                <div className="help-tip">
-                    <p>{ p.description }</p>
-                </div>
+                {descriptionElement}
             </div>
         );
     }
