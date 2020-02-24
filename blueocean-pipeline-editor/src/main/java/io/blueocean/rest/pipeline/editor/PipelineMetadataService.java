@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This provides and Blueocean REST API endpoint to obtain pipeline step metadata.
@@ -153,13 +154,27 @@ public class PipelineMetadataService implements ApiRoutable {
         List<ExportedPipelineFunction> pd = new ArrayList<>();
         // POST to this with parameter names
         // e.g. json:{"time": "1", "unit": "NANOSECONDS", "stapler-class": "org.jenkinsci.plugins.workflow.steps.TimeoutStep", "$class": "org.jenkinsci.plugins.workflow.steps.TimeoutStep"}
+        // Get all step descriptors (unfortunately the upper list will contain some blueOceanStepDescriptors)
+        List<StepDescriptor> stepDescriptors = StepDescriptor.all();
+        List<BlueOceanStepDescriptor> blueOceanStepDescriptors = ExtensionList.lookup(BlueOceanStepDescriptor.class);
+        // Get all the function names (so we can filter the stepDescriptors by then)
+        List<String> blueOceanFunctionNames = blueOceanStepDescriptors.stream().map(BlueOceanStepDescriptor::getFunctionName).collect(Collectors.toList());
+        // Filter the list down so it doesn't contain our blue ocean descriptors.
+        stepDescriptors = stepDescriptors.stream().filter(sd -> !blueOceanFunctionNames.contains(sd.getFunctionName())).collect(Collectors.toList());
 
-        for (StepDescriptor d : StepDescriptor.all()) {
+        for (StepDescriptor d : stepDescriptors) {
             if (includeStep(d)) {
                 ExportedPipelineStep step = getStepMetadata(d);
                 if (step != null) {
                     pd.add(step);
                 }
+            }
+        }
+
+        for (BlueOceanStepDescriptor blueOceanStepDescriptor : blueOceanStepDescriptors) {
+            ExportedPipelineStep step = getStepMetadata(blueOceanStepDescriptor);
+            if (step != null) {
+                pd.add(step);
             }
         }
 
@@ -238,6 +253,38 @@ public class PipelineMetadataService implements ApiRoutable {
             DescribableModel<? extends Step> model = new DescribableModel<>(d.clazz);
 
             ExportedPipelineStep step = new ExportedPipelineStep(model, d.getFunctionName(), d);
+
+            // Let any decorators adjust the step properties
+            for (ExportedDescribableParameterDecorator decorator : ExtensionList.lookup(ExportedDescribableParameterDecorator.class)) {
+                decorator.decorate(step, step.getParameters());
+            }
+
+            return step;
+        } catch (NoStaplerConstructorException e) {
+            // not a normal step?
+            return null;
+        }
+    }
+
+    private @CheckForNull ExportedPipelineStep getStepMetadata(BlueOceanStepDescriptor d) {
+        try {
+            DescribableModel<? extends Step> model = new DescribableModel<>(d.clazz);
+
+            ExportedPipelineStep step = new ExportedPipelineStep(model, d.getFunctionName(), d);
+            step.setStepDescription(d.getStepDescription());
+            // Add blue ocean specific properties
+            for(int i = 0; i < step.getParameters().size(); i++) {
+                ExportedDescribableParameter parameter = step.getParameters().get(i);
+                List<BlueOceanDescribableParameter> blueOceanDescribableParameterList = d.getParameterList().stream().filter(p -> p.getNameId().equals(parameter.getCapitalizedName())).collect(Collectors.toList());
+                if(!blueOceanDescribableParameterList.isEmpty()) {
+                    // It doesn't matter if we have multiple matches, grab the first
+                    BlueOceanDescribableParameter blueOceanDescribableParameter = blueOceanDescribableParameterList.get(0);
+                    parameter.setDisplayName(blueOceanDescribableParameter.getDisplayName());
+                    parameter.setDescription(blueOceanDescribableParameter.getParameterDesc());
+                    // Place the parameter back in the list
+                    step.updateParameter(i, parameter);
+                }
+            }
 
             // Let any decorators adjust the step properties
             for (ExportedDescribableParameterDecorator decorator : ExtensionList.lookup(ExportedDescribableParameterDecorator.class)) {

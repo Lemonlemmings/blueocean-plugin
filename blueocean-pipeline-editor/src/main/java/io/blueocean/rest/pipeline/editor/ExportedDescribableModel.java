@@ -37,6 +37,7 @@ import java.util.List;
 public class ExportedDescribableModel {
     protected final DescribableModel<?> model;
     protected final String symbol;
+    protected final List<ExportedDescribableParameter> params;
 
     public ExportedDescribableModel(DescribableModel<?> model) {
         this(model, null);
@@ -45,6 +46,11 @@ public class ExportedDescribableModel {
     public ExportedDescribableModel(DescribableModel<?> model, String symbol) {
         this.model = model;
         this.symbol = symbol;
+
+        this.params = new ArrayList<>();
+        for (DescribableParameter p : model.getParameters()) {
+            this.params.add(new ExportedDescribableParameter(p));
+        }
     }
 
     /**
@@ -55,7 +61,7 @@ public class ExportedDescribableModel {
     public String getType() {
         return model.getType().getName();
     }
-    
+
     /**
      * Provides the symbol for this describable
      * @return
@@ -92,17 +98,16 @@ public class ExportedDescribableModel {
         return model.getHelp();
     }
 
+    public void updateParameter(int index, ExportedDescribableParameter parameter) {
+        this.params.set(index, parameter);
+    }
+
     /**
      * Properties the describable supports
      * See {@link DescribableModel#getParameters()}
      */
     @Exported
     public List<ExportedDescribableParameter> getParameters() {
-        List<ExportedDescribableParameter> params = new ArrayList<>();
-
-        for (DescribableParameter p : model.getParameters()) {
-            params.add(new ExportedDescribableParameter(p));
-        }
-        return params;
+        return this.params;
     }
 }

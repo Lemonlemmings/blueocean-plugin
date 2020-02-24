@@ -12,6 +12,7 @@ import java.util.List;
 @ExportedBean
 public class ExportedPipelineStep extends ExportedPipelineFunction {
     protected final StepDescriptor descriptor;
+    protected String description = "I am a short description";
 
     public ExportedPipelineStep(DescribableModel<? extends Step> model, String functionName,
                                 StepDescriptor descriptor) {
@@ -30,7 +31,7 @@ public class ExportedPipelineStep extends ExportedPipelineFunction {
         }
         return out;
     }
-    
+
     /**
      * The Java class names that this pipeline requires to be in context
      */
@@ -42,7 +43,7 @@ public class ExportedPipelineStep extends ExportedPipelineFunction {
         }
         return out;
     }
-    
+
     /**
      * Indicates this step wraps a block of other steps
      */
@@ -51,7 +52,19 @@ public class ExportedPipelineStep extends ExportedPipelineFunction {
     public boolean getIsBlockContainer() {
         return descriptor.takesImplicitBlockArgument();
     }
-    
+
+    /**
+     * A test for pushing step information through
+     */
+    @Exported
+    public String getStepDescription() {
+        return this.description;
+    }
+
+    public void setStepDescription(String stepDescription) {
+        this.description = stepDescription;
+    }
+
     /**
      * Relative descriptor URL for this step
      */

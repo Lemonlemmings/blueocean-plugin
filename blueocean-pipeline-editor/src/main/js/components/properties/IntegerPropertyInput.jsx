@@ -5,9 +5,15 @@ import { getArg, setArg } from '../../services/PipelineMetadataService';
 export default class IntegerPropertyInput extends React.Component {
     render() {
         const { type: p, step } = this.props;
+        var title = p.capitalizedName;
+        if(p.displayName) {
+            title = p.displayName;
+        }
+        title += (p.isRequired ? '*' : '');
+
         return (
             <FormElement
-                title={p.capitalizedName + (p.isRequired ? '*' : '')}
+                title={title}
                 errorMessage={!step.pristine && p.isRequired && !getArg(step, p.name).value && p.capitalizedName + ' is required'}
             >
                 <div className="TextInput">
@@ -20,6 +26,9 @@ export default class IntegerPropertyInput extends React.Component {
                             this.props.onChange(step);
                         }}
                     />
+                </div>
+                <div className="help-tip">
+                    <p>{ p.description }</p>
                 </div>
             </FormElement>
         );

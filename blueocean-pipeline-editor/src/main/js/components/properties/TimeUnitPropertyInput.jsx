@@ -7,9 +7,15 @@ const timeUnits = ['SECONDS', 'MINUTES', 'HOURS', 'DAYS', 'NANOSECONDS', 'MICROS
 export default class TimeUnitPropertyInput extends React.Component {
     render() {
         const { step, type, onChange, propName } = this.props;
+        var p = type;
+        var title = p.capitalizedName;
+        if(p.displayName) {
+            title = p.displayName;
+        }
+        title += (p.isRequired ? '*' : '');
         return (
             <div>
-                <label className="form-label">{type.capitalizedName + (type.isRequired ? '*' : '')}</label>
+                <label className="form-label">{title}</label>
                 <Dropdown
                     options={timeUnits}
                     defaultOption={getArg(step, propName).value || timeUnits[0]}
@@ -18,6 +24,9 @@ export default class TimeUnitPropertyInput extends React.Component {
                         onChange(step);
                     }}
                 />
+                <div className="help-tip">
+                    <p>{ p.description }</p>
+                </div>
             </div>
         );
     }

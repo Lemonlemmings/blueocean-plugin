@@ -20,6 +20,8 @@ import java.util.List;
 @ExportedBean
 public class ExportedDescribableParameter {
     protected final DescribableParameter param;
+    protected String displayName = null;
+    protected String description = null;
 
     public ExportedDescribableParameter(DescribableParameter param) {
         this.param = param;
@@ -109,5 +111,23 @@ public class ExportedDescribableParameter {
         }
 
         return null;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Exported
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    @Exported
+    public String getDisplayName() {
+        return this.displayName;
     }
 }
