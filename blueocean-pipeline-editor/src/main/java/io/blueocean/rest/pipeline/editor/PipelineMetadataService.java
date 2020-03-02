@@ -281,6 +281,7 @@ public class PipelineMetadataService implements ApiRoutable {
                     BlueOceanDescribableParameter blueOceanDescribableParameter = blueOceanDescribableParameterList.get(0);
                     parameter.setDisplayName(blueOceanDescribableParameter.getDisplayName());
                     parameter.setDescription(blueOceanDescribableParameter.getParameterDesc());
+                    parameter.setDefaultValue(blueOceanDescribableParameter.getDefaultValue());
                     // Place the parameter back in the list
                     step.updateParameter(i, parameter);
                 }

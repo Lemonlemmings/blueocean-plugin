@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dropdown } from '@jenkins-cd/design-language';
-import { getArg, setArg } from '../../services/PipelineMetadataService';
+import { getArg, setArg, setDefaultArg } from '../../services/PipelineMetadataService';
 
 const timeUnits = ['SECONDS', 'MINUTES', 'HOURS', 'DAYS', 'NANOSECONDS', 'MICROSECONDS', 'MILLISECONDS'];
 
@@ -17,6 +17,10 @@ export default class TimeUnitPropertyInput extends React.Component {
         let descriptionElement;
         if(p.description) {
             descriptionElement = <div className="help-tip"><p>{ p.description }</p></div>;
+        }
+
+        if(p.defaultValue) {
+            setDefaultArg(step, propName, p.defaultValue);
         }
 
         return (

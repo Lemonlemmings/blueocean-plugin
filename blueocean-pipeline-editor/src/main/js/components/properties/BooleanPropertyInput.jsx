@@ -1,6 +1,6 @@
 import React from 'react';
 import { Checkbox } from '@jenkins-cd/design-language';
-import { getArg, setArg } from '../../services/PipelineMetadataService';
+import { getArg, setArg, setDefaultArg } from '../../services/PipelineMetadataService';
 
 export default class BooleanPropertyInput extends React.Component {
     render() {
@@ -14,6 +14,18 @@ export default class BooleanPropertyInput extends React.Component {
         let descriptionElement;
         if(p.description) {
             descriptionElement = <div className="help-tip"><p>{ p.description }</p></div>;
+        }
+
+        if(p.defaultValue) {
+            if(p.defaultValue == "true" || p.defaultValue == true) {
+                console.log("Value: " + p.defaultValue + " Type: " + typeof p.defaultValue);
+                p.defaultValue = true;
+            }
+            else {
+                console.log("Value: " + p.defaultValue + " Type: " + typeof p.defaultValue);
+                p.defaultValue = false;
+            }
+            setDefaultArg(this.props.step, this.props.propName, p.defaultValue);
         }
 
         return (

@@ -22,6 +22,7 @@ public class ExportedDescribableParameter {
     protected final DescribableParameter param;
     protected String displayName = null;
     protected String description = null;
+    protected String defaultValue = null;
 
     public ExportedDescribableParameter(DescribableParameter param) {
         this.param = param;
@@ -129,5 +130,14 @@ public class ExportedDescribableParameter {
     @Exported
     public String getDisplayName() {
         return this.displayName;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    @Exported
+    public String getDefaultValue() {
+        return this.defaultValue;
     }
 }

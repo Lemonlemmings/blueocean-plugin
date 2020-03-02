@@ -105,7 +105,7 @@ export class EditorStepDetails extends Component {
 
         let stepDescriptionElement = null;
         if(stepMetadata.stepDescription) {
-            stepDescriptionElement = <p>{stepMetadata.stepDescription}</p>;
+            stepDescriptionElement = <p className="step-description">{stepMetadata.stepDescription}</p>;
         }
 
         return (

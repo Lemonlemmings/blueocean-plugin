@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormElement, TextInput } from '@jenkins-cd/design-language';
-import { getArg, setArg } from '../../services/PipelineMetadataService';
+import { getArg, setArg, setDefaultArg } from '../../services/PipelineMetadataService';
 
 export default class StringPropertyInput extends React.Component {
     render() {
@@ -14,6 +14,10 @@ export default class StringPropertyInput extends React.Component {
         let descriptionElement;
         if(p.description) {
             descriptionElement = <div className="help-tip"><p>{ p.description }</p></div>;
+        }
+
+        if(p.defaultValue) {
+            setDefaultArg(step, this.props.propName, p.defaultValue);
         }
 
         return (

@@ -24,6 +24,15 @@ export function setArg(step, name, value, isLiteral = true) {
     }
 }
 
+export function setDefaultArg(step, name, value, isLiteral = true) {
+    if (step.data && !step.data[name]) {
+        step.data[name] = {
+            isLiteral,
+            value,
+        };
+    }
+}
+
 class PipelineMetadataService {
     cache: object = {};
 
